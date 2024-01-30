@@ -1,0 +1,41 @@
+<div class="container-fluid">
+  <%= form_tag import_employees_path, class: "input-group mb-3", multipart: true do %>
+    <%= file_field_tag :file, class: "form-control" %>
+    <%= submit_tag 'Importer' %>
+  <% end %>
+  <div class="row">
+    <div class="col-sm-12">
+      <%= form_with(url: root_path, method: :get, local: true) do |form| %>
+        <div class="input-group">
+          <%= form.label :selected_month, "Select Month:", class: "input-group-text" %>
+          <%= form.month_field :selected_month, class: "form-control" %>
+          <%= form.submit "Show Employees", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="accordion" id="employeesAccordion">
+      <% @employees.each_with_index do |employee, index| %>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading<%= employee.id %>">
+            <button class="accordion-button <%= index != 0 ? "collapsed" : "" %>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= employee.id %>" aria-expanded="<%= index == 0 ? "true" : "false" %>" aria-controls="collapse<%= employee.id %>">
+              <%= employee.first_name %>
+            </button>
+          </h2>
+          <div id="collapse<%= employee.id %>" class="accordion-collapse collapse <%= index == 0 ? "show" : "" %>" aria-labelledby="heading<%= employee.id %>" data-bs-parent="#employeesAccordion">
+            <div class="accordion-body">
+              <ul class="list-group">
+                <% employee.month_workdays(@current_month).order(:day_date).each do |work_day| %>
+                  <li class="list-group-item">
+                    <%= "Date: #{work_day.day_date}, Start Time: #{work_day.start_time.strftime("%H:%M:%S")}, End Time: #{work_day.end_time.strftime("%H:%M:%S")}" %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div >

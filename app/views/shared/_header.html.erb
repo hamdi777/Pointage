@@ -1,0 +1,12 @@
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand">Com&Dev</a>
+    <form class="d-flex" role="search">
+        <% if user_signed_in? %> 
+            <%= button_to "Sign out", destroy_user_session_path, class: "btn btn-outline-alert", method: :delete %> 
+        <% else %>
+            <%= button_to "Sign in", new_user_session_path, class: "btn btn-outline-success" %> 
+        <% end %>
+    </form>
+  </div>
+</nav>
